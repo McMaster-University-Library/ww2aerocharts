@@ -15,7 +15,8 @@ The Welcome Modal is implemented by using Html, CSS and Java Script technology. 
 * **image0.jpg, image1.jpg, image2.jpg…** : a series of image files to be shown in each slide. The recommendation is for all images to have width and height dimensions of 1200*600 pixels. 
 
 ## Integration Guidance ##
-For the Welcome Modal integrated with another window, the main work will be as following –
+For the Welcome Modal integrated with another window, the main work will be as following
+
 1. Copy above files to the target root dir. If there are conflicts of file name, you should change file name accordingly.
 2. Open the file of index.html.
 3. Copy the code line 4, 5 as below, then paste them to the related position in the main html file of background window.
