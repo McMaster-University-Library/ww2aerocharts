@@ -1,72 +1,274 @@
-<!DOCTYPE html>
-<html>
-<title>WWII Aeronautical Charts index</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="style.css">
-<body>
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        
+		<link rel="stylesheet" href="css/leaflet.css" />
+        <link rel="stylesheet" type="text/css" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/MarkerCluster.css" />
+        <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+        <link rel="stylesheet" href="http://k4r573n.github.io/leaflet-control-osm-geocoder/Control.OSMGeocoder.css" />
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet-heat.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/OSMBuildings-Leaflet.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="http://k4r573n.github.io/leaflet-control-osm-geocoder/Control.OSMGeocoder.js"></script>
+        <script src="js/leaflet.markercluster.js"></script>
+        <!--The following items come from the welcome page mockup-->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<!--------------------------------------------------------->
+		<style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>WWII Aeronautical Charts index</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="data/json_AeronauticalChartIndex0.js"></script>
+        <script src="data/json_ChartsheetsthatarenotavailableinDigitalArchive1.js"></script>
+        <script src="data/json_AvailableinDigitalArchiveMcMasterUniversityLibrary2.js"></script>
 
-<!-- Trigger/Open The Modal -->
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 0.5
+              });
+            }
+        }
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:26, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+        var feature_group = new L.featureGroup([]);
+        var bounds_group = new L.featureGroup([]);
+        var raster_group = new L.LayerGroup([]);
+        var basemap0 = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>,<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 26
+        });
+        basemap0.addTo(map);
+        var basemap1 = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>,&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            maxZoom: 26
+        });
+        basemap1.addTo(map);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+            map.setMaxBounds(map.getBounds());
+        }
+        function geoJson2heat(geojson, weight) {
+          return geojson.features.map(function(feature) {
+            return [
+              feature.geometry.coordinates[1],
+              feature.geometry.coordinates[0],
+              feature.properties[weight]
+            ];
+          });
+        }
+        function pop_AeronauticalChartIndex0(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    layer.setStyle(doStyleAeronauticalChartIndex0(feature));
+
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table><tr><th scope="row">Sheet Number</th><td>' + (feature.properties['Sheet'] !== null ? Autolinker.link(String(feature.properties['Sheet'])) : '') + '</td></tr><tr><th scope="row">NW corner (latitude, longitude)</th><td>' + (feature.properties['NW_corner_'] !== null ? Autolinker.link(String(feature.properties['NW_corner_'])) : '') + '</td></tr><tr><th scope="row">NE corner (latitude, longitude)</th><td>' + (feature.properties['NE_corner_'] !== null ? Autolinker.link(String(feature.properties['NE_corner_'])) : '') + '</td></tr><tr><th scope="row">SE corner (latitude, longitude)</th><td>' + (feature.properties['SE_corner_'] !== null ? Autolinker.link(String(feature.properties['SE_corner_'])) : '') + '</td></tr><tr><th scope="row">SW corner (latitude, longitude)</th><td>' + (feature.properties['SW_corner_'] !== null ? Autolinker.link(String(feature.properties['SW_corner_'])) : '') + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleAeronauticalChartIndex0(feature) {
+            return {
+                weight: 1.04,
+                color: '#cd6300',
+                fillColor: 'none',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                opacity: 0.81568627451,
+                fillOpacity: 0.81568627451
+            };
+        }
+        map.createPane('pane_AeronauticalChartIndex0');
+        map.getPane('pane_AeronauticalChartIndex0').style.zIndex = 601;
+        var json_AeronauticalChartIndex0JSON = new L.geoJson(json_AeronauticalChartIndex0, {
+            pane: 'pane_AeronauticalChartIndex0',
+            onEachFeature: pop_AeronauticalChartIndex0,
+            style: doStyleAeronauticalChartIndex0
+        });
+        bounds_group.addLayer(json_AeronauticalChartIndex0JSON);
+        feature_group.addLayer(json_AeronauticalChartIndex0JSON);
+        function pop_ChartsheetsthatarenotavailableinDigitalArchive1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    layer.setStyle(doStyleChartsheetsthatarenotavailableinDigitalArchive1(feature));
+
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table><tr><th scope="row">Sheet number</th><td>' + (feature.properties['Sheet'] !== null ? Autolinker.link(String(feature.properties['Sheet'])) : '') + '</td></tr><tr><th scope="row">NW corner (latitude, longitude)</th><td>' + (feature.properties['NW_corner_'] !== null ? Autolinker.link(String(feature.properties['NW_corner_'])) : '') + '</td></tr><tr><th scope="row">NE corner (latitude, longitude)</th><td>' + (feature.properties['NE_corner_'] !== null ? Autolinker.link(String(feature.properties['NE_corner_'])) : '') + '</td></tr><tr><th scope="row">SE corner (latitude, longitude)</th><td>' + (feature.properties['SE_corner_'] !== null ? Autolinker.link(String(feature.properties['SE_corner_'])) : '') + '</td></tr><tr><th scope="row">SW corner (latitude, longitude)</th><td>' + (feature.properties['SW_corner_'] !== null ? Autolinker.link(String(feature.properties['SW_corner_'])) : '') + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleChartsheetsthatarenotavailableinDigitalArchive1(feature) {
+            return {
+                weight: 1.04,
+                color: '#000000',
+                fillColor: '#cecece',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                opacity: 0.48,
+                fillOpacity: 0.154352941176
+            };
+        }
+        map.createPane('pane_ChartsheetsthatarenotavailableinDigitalArchive1');
+        map.getPane('pane_ChartsheetsthatarenotavailableinDigitalArchive1').style.zIndex = 602;
+        var json_ChartsheetsthatarenotavailableinDigitalArchive1JSON = new L.geoJson(json_ChartsheetsthatarenotavailableinDigitalArchive1, {
+            pane: 'pane_ChartsheetsthatarenotavailableinDigitalArchive1',
+            onEachFeature: pop_ChartsheetsthatarenotavailableinDigitalArchive1,
+            style: doStyleChartsheetsthatarenotavailableinDigitalArchive1
+        });
+        bounds_group.addLayer(json_ChartsheetsthatarenotavailableinDigitalArchive1JSON);
+        feature_group.addLayer(json_ChartsheetsthatarenotavailableinDigitalArchive1JSON);
+        function pop_AvailableinDigitalArchiveMcMasterUniversityLibrary2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    layer.setStyle(doStyleAvailableinDigitalArchiveMcMasterUniversityLibrary2(feature));
+
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table><tr><th scope="row">Sheet Number</th><td>' + (feature.properties['Sheet'] !== null ? Autolinker.link(String(feature.properties['Sheet'])) : '') + '</td></tr><tr><th scope="row">NW corner (latitude, longitude)</th><td>' + (feature.properties['NW_corner_'] !== null ? Autolinker.link(String(feature.properties['NW_corner_'])) : '') + '</td></tr><tr><th scope="row">NE corner (latitude, longitude)</th><td>' + (feature.properties['NE_corner_'] !== null ? Autolinker.link(String(feature.properties['NE_corner_'])) : '') + '</td></tr><tr><th scope="row">SE corner (latitude, longitude)</th><td>' + (feature.properties['SE_corner_'] !== null ? Autolinker.link(String(feature.properties['SE_corner_'])) : '') + '</td></tr><tr><th scope="row">SW corner (latitude, longitude)</th><td>' + (feature.properties['SW_corner_'] !== null ? Autolinker.link(String(feature.properties['SW_corner_'])) : '') + '</td></tr><tr><td colspan="2"><strong>URL</strong><br />' + (feature.properties['URL'] !== null ? Autolinker.link(String(feature.properties['URL'])) : '') + '</td></tr><tr><th scope="row">Chart title</th><td>' + (feature.properties['titlefield'] !== null ? Autolinker.link(String(feature.properties['titlefield'])) : '') + '</td></tr></table>';
+            layer.bindPopup(popupContent);
+        }
+
+        function doStyleAvailableinDigitalArchiveMcMasterUniversityLibrary2(feature) {
+            return {
+                weight: 1.04,
+                color: '#000000',
+                fillColor: '#fdbf6f',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                opacity: 0.5,
+                fillOpacity: 0.5
+            };
+        }
+        map.createPane('pane_AvailableinDigitalArchiveMcMasterUniversityLibrary2');
+        map.getPane('pane_AvailableinDigitalArchiveMcMasterUniversityLibrary2').style.zIndex = 603;
+        var json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON = new L.geoJson(json_AvailableinDigitalArchiveMcMasterUniversityLibrary2, {
+            pane: 'pane_AvailableinDigitalArchiveMcMasterUniversityLibrary2',
+            onEachFeature: pop_AvailableinDigitalArchiveMcMasterUniversityLibrary2,
+            style: doStyleAvailableinDigitalArchiveMcMasterUniversityLibrary2
+        });
+        bounds_group.addLayer(json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON);
+        feature_group.addLayer(json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON);
+        raster_group.addTo(map);
+        feature_group.addTo(map);
+        var osmGeocoder = new L.Control.OSMGeocoder({
+            collapsed: false,
+            position: 'topright',
+            text: 'Search',
+        });
+        osmGeocoder.addTo(map);
+        var baseMaps = {'Stamen Toner': basemap0, 'Thunderforest Transport': basemap1};
+        L.control.layers(baseMaps,{'<img src="legend/AvailableinDigitalArchiveMcMasterUniversityLibrary2.png" /> Available in Digital Archive @ McMaster University Library': json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON,'<img src="legend/ChartsheetsthatarenotavailableinDigitalArchive1.png" /> Chart sheets that are not available in Digital Archive': json_ChartsheetsthatarenotavailableinDigitalArchive1JSON,'<img src="legend/AeronauticalChartIndex0.png" /> Aeronautical Chart Index': json_AeronauticalChartIndex0JSON,},{collapsed:false}).addTo(map);
+        setBounds();
+        </script>
+				<!---------------------This comes from the welcome mockup----->
+		<!-- Trigger/Open The Modal -->
 <button id="myBtn"><p>Click here for help</p></button>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
 
-	<!-- Modal content -->
-	<div class="modal-content">
+<!-- Modal content -->
+  <div class="modal-content">
   
-		<!-- Modal header -->
+  <!-- Modal header -->
 		<div class="modal-header">
-		    <span class="close">×</span>
-		    <h2>Welcome to the McMaster University Library’s WWII Aeronautical Charts index</h2>
+		  <span class="close">×</span>
+		  <h2>Welcome to the McMaster University Library’s WWII Aeronautical Charts index</h2>
 		</div>
-		
-		<!-- Modal content slide begin-->
+
 		<div class="w3-content w3-display-container">
-			<a class="w3-btn-floating w3-hover-dark-grey w3-display-left" onclick="plusDivs(-1)">&#10094;</a>
-			<a class="w3-btn-floating w3-hover-dark-grey w3-display-right" onclick="plusDivs(1)">&#10095;</a>
+
+		<a class="w3-btn-floating w3-hover-dark-grey w3-display-left" onclick="plusDivs(-1)">&#10094;</a>
+		<a class="w3-btn-floating w3-hover-dark-grey w3-display-right" onclick="plusDivs(1)">&#10095;</a>
 		
-			<!-- Slide 1 -->
-			<div class="w3-display-container mySlides">
-				<img src="image0.jpg" style="width:100%">
-				<div class="modal-footer">
-				Welcome to the McMaster University Library’s <b>WWII Aeronautical Charts Index</b>—an interactive tool for finding and accessing World War II era 1:1 million U.S. American Air Forces (AAF) Aeronautical Charts.  
-				<br>
-				The Aeronautical charts index consists of four components: a zooming tool; the index; a search box, and the layer panel.
-				<br>
-				Close this window (or click on the map) to begin exploring.
-				</div>
-			</div>
-	
-			<!-- Slide 2 -->
-			<div class="w3-display-container mySlides">
-				<img src="image1.jpg" style="width:100%">
-				<div class="modal-footer">
-				Change the base map using the layer panel.
-				</div>
-			</div>
-
-			<!-- Slide 3 -->
-			<div class="w3-display-container mySlides">
-				<img src="image2.jpg" style="width:100%">
-				<div class="modal-footer">
-				Find and zoom to an area of interest by performing an address search in the search box.
-				</div>
-			</div>
-
-			<!-- Slide 4 -->
-			<div class="w3-display-container mySlides">
-				<img src="image3.jpg" style="width:100%">
-				<div class="modal-footer">
-				Click on a grid square to find more information on a given charts. An orange shaded grid square indicates that a digital version is available for viewing. 
-				</div>
-			</div>
-
-		<!-- Modal content slide end-->
+		<!-- Slide 1 -->
+		<div class="w3-display-container mySlides">
+		  <img src="image0.jpg" style="width:100%">
+		  <div class="modal-footer">
+		  Welcome to McMaster University Library’s <b>WWII Aeronautical Charts Index</b>—an interactive tool for finding and accessing World War II era 1:1 million U.S. American Air Forces (AAF) Aeronautical Charts.  
+			<br>
+			The Aeronautical charts index consists of four components: a zooming tool; the index; a search box, and the layer panel.
+			<br>
+			Close this window (or click on the map) to begin exploring.
+		  </div>
 		</div>
-	</div>
-</div>
 		
-<script src="window.js"></script>
+		<!-- Slide 2 -->
+		<div class="w3-display-container mySlides">
+		  <img src="image1.jpg" style="width:100%">
+		  <div class="modal-footer">
+			Change the base map using the layer panel.
+		  </div>
+		</div>
 
-</body>
+		<!-- Slide 3 -->
+		<div class="w3-display-container mySlides">
+		  <img src="image2.jpg" style="width:100%">
+		  <div class="modal-footer">
+		Find and zoom to an area of interest by performing an address search in the search box.
+		  </div>
+		</div>
+
+		<!-- Slide 4 -->
+		<div class="w3-display-container mySlides">
+		  <img src="image3.jpg" style="width:100%">
+		  <div class="modal-footer">
+		Click on a grid square to find more information on a given chart. An orange shaded grid square indicates that a digital version is available for viewing. 
+		  </div>
+		</div>
+		<!--slides change end -->
+		
+  </div>
+	
+	</div>
+	<script src="window.js"></script>
+				<!---------------------END OF WELCOME MOCKUP----->
+		
+    </body>
 </html>
