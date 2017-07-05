@@ -5057,7 +5057,7 @@ L.ImageOverlay = L.Layer.extend({
 
 		// @option interactive: Boolean = false
 		// If `true`, the image overlay will emit [mouse events](#interactive-layer) when clicked or hovered.
-		interactive: false,
+		interactive: true,
 
 		// @option attribution: String = null
 		// An optional string containing HTML to be shown on the `Attribution control`
@@ -5712,13 +5712,7 @@ L.Marker = L.Layer.extend({
 
 		if (L.Handler.MarkerDrag) {
 			var draggable = this.options.draggable;
-			if (this.dragging) {
-				draggable = this.dragging.enabled();
-				this.dragging.disable();
-			}
-
 			this.dragging = new L.Handler.MarkerDrag(this);
-
 			if (draggable) {
 				this.dragging.enable();
 			}
@@ -6609,7 +6603,7 @@ L.Tooltip = L.DivOverlay.extend({
 
 		// @option interactive: Boolean = false
 		// If true, the tooltip will listen to the feature events.
-		interactive: false,
+		interactive: true,
 
 		// @option opacity: Number = 0.9
 		// Tooltip container opacity.

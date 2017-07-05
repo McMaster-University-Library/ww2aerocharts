@@ -1,227 +1,71 @@
-<!doctype html>
 <html lang="en">
+
     <head>
-        <meta charset="utf-8">
+	
+        <title>McMaster University's Aeronautical Charts Index</title>
+        <meta charset="utf-8" />
+        <link rel="shortcut icon" href="http://library.mcmaster.ca/sites/default/files/favicon.ico" type="image/vnd.microsoft.icon" />
+
+		<!----------THE FOLLOWING IS FOR THE WELCOME PAGE POP-UP.---------->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<!----------------------------------------------------------------->
         
 		<link rel="stylesheet" href="css/leaflet.css" />
         <link rel="stylesheet" type="text/css" href="css/qgis2web.css">
         <link rel="stylesheet" href="css/MarkerCluster.css" />
         <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
-        <link rel="stylesheet" href="http://k4r573n.github.io/leaflet-control-osm-geocoder/Control.OSMGeocoder.css" />
+        <link rel="stylesheet" href="css/Control.OSMGeocoder.css" />
         <script src="js/leaflet.js"></script>
         <script src="js/leaflet-heat.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/OSMBuildings-Leaflet.js"></script>
         <script src="js/leaflet-hash.js"></script>
         <script src="js/Autolinker.min.js"></script>
-        <script src="http://k4r573n.github.io/leaflet-control-osm-geocoder/Control.OSMGeocoder.js"></script>
+        <script src="js/Control.OSMGeocoder.js"></script>
         <script src="js/leaflet.markercluster.js"></script>
-        <!--The following items come from the welcome page mockup-->
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" type="text/css" href="style.css">
-		<!--------------------------------------------------------->
-		<style>
-        html, body, #map {
-            width: 100%;
-            height: 100%;
-            padding: 0;
-            margin: 0;
-        }
-        </style>
-        <title>WWII Aeronautical Charts index</title>
+
     </head>
-    <body>
-        <div id="map">
-        </div>
-        <script src="data/json_AeronauticalChartIndex0.js"></script>
-        <script src="data/json_ChartsheetsthatarenotavailableinDigitalArchive1.js"></script>
-        <script src="data/json_AvailableinDigitalArchiveMcMasterUniversityLibrary2.js"></script>
+    
+<body style="font-family:Segoe UI, Arial; background: white; font-size: 11px;">
+	
+	<header>
+		
+		<div class="logo">
+			<img src="http://www.mcmaster.ca/opr/html/opr/mcmaster_brand/visual_identity/download/full_colour.jpg" />
+		</div>
+		
+		<div id="buttonzone" style="right:1vw">
+		<button class="button" id="myBtn"><p>Tutorial</p></button>
+		<a href="http://digitalarchive.mcmaster.ca/" style="text-decoration:none; margin-left: 0.8vw" target="_blank"><button class="button">Digital Archive</button></a>
+		<a href="https://library.mcmaster.ca/maps/" style="text-decoration:none" target="_blank"><button class="button">Contact</button></a>
+		</div>
+	
+		<hgroup>
+		<h1 style="font-size:1.4vw; margin-left:6vw;"><b>McMaster University Library | </b>Aeronautical Charts Index</h1>
+		</hgroup>
+		
+	</header>
 
-        <script>
-        var highlightLayer;
-        function highlightFeature(e) {
-            highlightLayer = e.target;
+<div id = "map" style="width: 100vw; height: 93.5vh; font-size: 11px;"></div>
 
-            if (e.target.feature.geometry.type === 'LineString') {
-              highlightLayer.setStyle({
-                color: '#ffff00',
-              });
-            } else {
-              highlightLayer.setStyle({
-                fillColor: '#ffff00',
-                fillOpacity: 0.5
-              });
-            }
-        }
-        L.ImageOverlay.include({
-            getBounds: function () {
-                return this._bounds;
-            }
-        });
-        var map = L.map('map', {
-            zoomControl:true, maxZoom:26, minZoom:1
-        })
-        var hash = new L.Hash(map);
-        map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
-        var feature_group = new L.featureGroup([]);
-        var bounds_group = new L.featureGroup([]);
-        var raster_group = new L.LayerGroup([]);
-        var basemap0 = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {
-            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>,<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Mapdata: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-            maxZoom: 26
-        });
-        basemap0.addTo(map);
-        var basemap1 = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://www.opencyclemap.org">OpenCycleMap</a>,&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-            maxZoom: 26
-        });
-        basemap1.addTo(map);
-        function setBounds() {
-            if (bounds_group.getLayers().length) {
-                map.fitBounds(bounds_group.getBounds());
-            }
-            map.setMaxBounds(map.getBounds());
-        }
-        function geoJson2heat(geojson, weight) {
-          return geojson.features.map(function(feature) {
-            return [
-              feature.geometry.coordinates[1],
-              feature.geometry.coordinates[0],
-              feature.properties[weight]
-            ];
-          });
-        }
-        function pop_AeronauticalChartIndex0(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    layer.setStyle(doStyleAeronauticalChartIndex0(feature));
-
-                },
-                mouseover: highlightFeature,
-            });
-            var popupContent = '<table><tr><th scope="row">Sheet Number</th><td>' + (feature.properties['Sheet'] !== null ? Autolinker.link(String(feature.properties['Sheet'])) : '') + '</td></tr><tr><th scope="row">NW corner (latitude, longitude)</th><td>' + (feature.properties['NW_corner_'] !== null ? Autolinker.link(String(feature.properties['NW_corner_'])) : '') + '</td></tr><tr><th scope="row">NE corner (latitude, longitude)</th><td>' + (feature.properties['NE_corner_'] !== null ? Autolinker.link(String(feature.properties['NE_corner_'])) : '') + '</td></tr><tr><th scope="row">SE corner (latitude, longitude)</th><td>' + (feature.properties['SE_corner_'] !== null ? Autolinker.link(String(feature.properties['SE_corner_'])) : '') + '</td></tr><tr><th scope="row">SW corner (latitude, longitude)</th><td>' + (feature.properties['SW_corner_'] !== null ? Autolinker.link(String(feature.properties['SW_corner_'])) : '') + '</td></tr></table>';
-            layer.bindPopup(popupContent);
-        }
-
-        function doStyleAeronauticalChartIndex0(feature) {
-            return {
-                weight: 1.04,
-                color: '#cd6300',
-                fillColor: 'none',
-                dashArray: '',
-                lineCap: 'square',
-                lineJoin: 'bevel',
-                opacity: 0.81568627451,
-                fillOpacity: 0.81568627451
-            };
-        }
-        map.createPane('pane_AeronauticalChartIndex0');
-        map.getPane('pane_AeronauticalChartIndex0').style.zIndex = 601;
-        var json_AeronauticalChartIndex0JSON = new L.geoJson(json_AeronauticalChartIndex0, {
-            pane: 'pane_AeronauticalChartIndex0',
-            onEachFeature: pop_AeronauticalChartIndex0,
-            style: doStyleAeronauticalChartIndex0
-        });
-        bounds_group.addLayer(json_AeronauticalChartIndex0JSON);
-        feature_group.addLayer(json_AeronauticalChartIndex0JSON);
-        function pop_ChartsheetsthatarenotavailableinDigitalArchive1(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    layer.setStyle(doStyleChartsheetsthatarenotavailableinDigitalArchive1(feature));
-
-                },
-                mouseover: highlightFeature,
-            });
-            var popupContent = '<table><tr><th scope="row">Sheet number</th><td>' + (feature.properties['Sheet'] !== null ? Autolinker.link(String(feature.properties['Sheet'])) : '') + '</td></tr><tr><th scope="row">NW corner (latitude, longitude)</th><td>' + (feature.properties['NW_corner_'] !== null ? Autolinker.link(String(feature.properties['NW_corner_'])) : '') + '</td></tr><tr><th scope="row">NE corner (latitude, longitude)</th><td>' + (feature.properties['NE_corner_'] !== null ? Autolinker.link(String(feature.properties['NE_corner_'])) : '') + '</td></tr><tr><th scope="row">SE corner (latitude, longitude)</th><td>' + (feature.properties['SE_corner_'] !== null ? Autolinker.link(String(feature.properties['SE_corner_'])) : '') + '</td></tr><tr><th scope="row">SW corner (latitude, longitude)</th><td>' + (feature.properties['SW_corner_'] !== null ? Autolinker.link(String(feature.properties['SW_corner_'])) : '') + '</td></tr></table>';
-            layer.bindPopup(popupContent);
-        }
-
-        function doStyleChartsheetsthatarenotavailableinDigitalArchive1(feature) {
-            return {
-                weight: 1.04,
-                color: '#000000',
-                fillColor: '#cecece',
-                dashArray: '',
-                lineCap: 'square',
-                lineJoin: 'bevel',
-                opacity: 0.48,
-                fillOpacity: 0.154352941176
-            };
-        }
-        map.createPane('pane_ChartsheetsthatarenotavailableinDigitalArchive1');
-        map.getPane('pane_ChartsheetsthatarenotavailableinDigitalArchive1').style.zIndex = 602;
-        var json_ChartsheetsthatarenotavailableinDigitalArchive1JSON = new L.geoJson(json_ChartsheetsthatarenotavailableinDigitalArchive1, {
-            pane: 'pane_ChartsheetsthatarenotavailableinDigitalArchive1',
-            onEachFeature: pop_ChartsheetsthatarenotavailableinDigitalArchive1,
-            style: doStyleChartsheetsthatarenotavailableinDigitalArchive1
-        });
-        bounds_group.addLayer(json_ChartsheetsthatarenotavailableinDigitalArchive1JSON);
-        feature_group.addLayer(json_ChartsheetsthatarenotavailableinDigitalArchive1JSON);
-        function pop_AvailableinDigitalArchiveMcMasterUniversityLibrary2(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    layer.setStyle(doStyleAvailableinDigitalArchiveMcMasterUniversityLibrary2(feature));
-
-                },
-                mouseover: highlightFeature,
-            });
-            var popupContent = '<table><tr><th scope="row">Sheet Number</th><td>' + (feature.properties['Sheet'] !== null ? Autolinker.link(String(feature.properties['Sheet'])) : '') + '</td></tr><tr><th scope="row">NW corner (latitude, longitude)</th><td>' + (feature.properties['NW_corner_'] !== null ? Autolinker.link(String(feature.properties['NW_corner_'])) : '') + '</td></tr><tr><th scope="row">NE corner (latitude, longitude)</th><td>' + (feature.properties['NE_corner_'] !== null ? Autolinker.link(String(feature.properties['NE_corner_'])) : '') + '</td></tr><tr><th scope="row">SE corner (latitude, longitude)</th><td>' + (feature.properties['SE_corner_'] !== null ? Autolinker.link(String(feature.properties['SE_corner_'])) : '') + '</td></tr><tr><th scope="row">SW corner (latitude, longitude)</th><td>' + (feature.properties['SW_corner_'] !== null ? Autolinker.link(String(feature.properties['SW_corner_'])) : '') + '</td></tr><tr><td colspan="2"><strong>URL</strong><br />' + (feature.properties['URL'] !== null ? Autolinker.link(String(feature.properties['URL'])) : '') + '</td></tr><tr><th scope="row">Chart title</th><td>' + (feature.properties['titlefield'] !== null ? Autolinker.link(String(feature.properties['titlefield'])) : '') + '</td></tr></table>';
-            layer.bindPopup(popupContent);
-        }
-
-        function doStyleAvailableinDigitalArchiveMcMasterUniversityLibrary2(feature) {
-            return {
-                weight: 1.04,
-                color: '#000000',
-                fillColor: '#fdbf6f',
-                dashArray: '',
-                lineCap: 'square',
-                lineJoin: 'bevel',
-                opacity: 0.5,
-                fillOpacity: 0.5
-            };
-        }
-        map.createPane('pane_AvailableinDigitalArchiveMcMasterUniversityLibrary2');
-        map.getPane('pane_AvailableinDigitalArchiveMcMasterUniversityLibrary2').style.zIndex = 603;
-        var json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON = new L.geoJson(json_AvailableinDigitalArchiveMcMasterUniversityLibrary2, {
-            pane: 'pane_AvailableinDigitalArchiveMcMasterUniversityLibrary2',
-            onEachFeature: pop_AvailableinDigitalArchiveMcMasterUniversityLibrary2,
-            style: doStyleAvailableinDigitalArchiveMcMasterUniversityLibrary2
-        });
-        bounds_group.addLayer(json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON);
-        feature_group.addLayer(json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON);
-        raster_group.addTo(map);
-        feature_group.addTo(map);
-        var osmGeocoder = new L.Control.OSMGeocoder({
-            collapsed: false,
-            position: 'topright',
-            text: 'Search',
-        });
-        osmGeocoder.addTo(map);
-        var baseMaps = {'Stamen Toner': basemap0, 'Thunderforest Transport': basemap1};
-        L.control.layers(baseMaps,{'<img src="legend/AvailableinDigitalArchiveMcMasterUniversityLibrary2.png" /> Available in Digital Archive @ McMaster University Library': json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON,'<img src="legend/ChartsheetsthatarenotavailableinDigitalArchive1.png" /> Chart sheets that are not available in Digital Archive': json_ChartsheetsthatarenotavailableinDigitalArchive1JSON,'<img src="legend/AeronauticalChartIndex0.png" /> Aeronautical Chart Index': json_AeronauticalChartIndex0JSON,},{collapsed:false}).addTo(map);
-        setBounds();
-        </script>
-				<!---------------------This comes from the welcome mockup----->
-		<!-- Trigger/Open The Modal -->
-<button id="myBtn"><p>Click here for help</p></button>
+<!-------THE FOLLOWING IS FOR THE WELCOME PAGE POP-UP.--------->
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
 
 <!-- Modal content -->
-  <div class="modal-content">
+	<div class="modal-content">
   
   <!-- Modal header -->
 		<div class="modal-header">
-		  <span class="close">×</span>
-		  <h2>Welcome to the McMaster University Library’s WWII Aeronautical Charts index</h2>
+		  <span class="close" style="font-size:calc(12px + 1vw)">x</span>
+		  <h2 style="font-size:calc(12px + 1vw); font-weight:bold;">WELCOME</h2><h2 style="font-size:calc(10px + 0.5vw); font-size-adjust:auto; font-style:italic">A Guide to the McMaster University Library's World War II Aeronautical Charts Index</h2>
 		</div>
-
+		
 		<div class="w3-content w3-display-container">
 
 		<a class="w3-btn-floating w3-hover-dark-grey w3-display-left" onclick="plusDivs(-1)">&#10094;</a>
@@ -231,11 +75,10 @@
 		<div class="w3-display-container mySlides">
 		  <img src="image0.jpg" style="width:100%">
 		  <div class="modal-footer">
-		  Welcome to McMaster University Library’s <b>WWII Aeronautical Charts Index</b>—an interactive tool for finding and accessing World War II era 1:1 million U.S. American Air Forces (AAF) Aeronautical Charts.  
-			<br>
-			The Aeronautical charts index consists of four components: a zooming tool; the index; a search box, and the layer panel.
-			<br>
-			Close this window (or click on the map) to begin exploring.
+		  Welcome to McMaster University Library’s <b>World War II Aeronautical Charts Index</b> -- An interactive tool for finding and accessing World War II era 1:1 million U.S. American Air Forces (AAF) Aeronautical Charts. Features of this index along with the aeronautical charts include a zooming tool, a search box, and the layer panel.
+		  <br>
+		  <br>
+		  Close this window (or click on the map) to begin exploring.
 		  </div>
 		</div>
 		
@@ -243,7 +86,7 @@
 		<div class="w3-display-container mySlides">
 		  <img src="image1.jpg" style="width:100%">
 		  <div class="modal-footer">
-			Change the base map using the layer panel.
+			Change the base map using the layer panel on the right.
 		  </div>
 		</div>
 
@@ -262,13 +105,182 @@
 		Click on a grid square to find more information on a given chart. An orange shaded grid square indicates that a digital version is available for viewing. 
 		  </div>
 		</div>
-		<!--slides change end -->
 		
-  </div>
+		<!---Slide changes end.--->
 	
 	</div>
-	<script src="window.js"></script>
-				<!---------------------END OF WELCOME MOCKUP----->
-		
-    </body>
+</div>	
+
+<script src="window.js"></script>
+
+<!---------------------END OF WELCOME PAGE POP-UP.------------------------>
+
+<script src = "data/json_AeronauticalChartIndex0.js"></script>
+<script src = "data/json_ChartsheetsthatarenotavailableinDigitalArchive1.js"></script>
+<script src = "data/json_AvailableinDigitalArchiveMcMasterUniversityLibrary2.js"></script>
+
+<script style = "font-size: 8px;">
+
+var highlightLayer;
+
+function highlightFeature(e) {
+	highlightLayer = e.target;
+	if (e.target.feature.geometry.type === 'LineString') {
+	  highlightLayer.setStyle({
+		color: '#ffff00',
+	  });
+	} else {
+	  highlightLayer.setStyle({
+		fillColor: '#ffff00',
+		fillOpacity: 0.5
+	  });
+	}
+}
+
+var feature_group = new L.featureGroup([]);
+var bounds_group = new L.featureGroup([]);
+var raster_group = new L.LayerGroup([]);
+
+var map = L.map('map', {center: new L.LatLng(20, 0),zoom: 2, maxzoom: 26, minzoom: 2}); 
+map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
+
+var StamenToner = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {maxZoom: 26, attribution: 'Map tiles by  <a href="http://stamen.com">Stamen Design</a>' + '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0 </a>' + 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap </a>contributors ' + '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+});
+map.addLayer(StamenToner);
+
+var ThunderforestTransport = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {maxZoom: 26,
+	attribution: '&copy; <a href="http://www.opencyclemap.org"> OpenCycleMap </a>,&copy; <a href="http://openstreetmap.org"> OpenStreetMap </a> contributors ' + '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+});
+map.addLayer(ThunderforestTransport);
+
+var baseMaps = {"Stamen Toner": StamenToner,"Thunderforest Transport": ThunderforestTransport}; 
+
+function setBounds() {
+	if (bounds_group.getLayers().length) {
+		map.fitBounds(bounds_group.getBounds());
+	}
+	map.setMaxBounds(map.getBounds());
+}
+
+function geoJson2heat(geojson, weight) {
+  return geojson.features.map(function(feature) {
+	return [
+	  feature.geometry.coordinates[1],
+	  feature.geometry.coordinates[0],
+	  feature.properties[weight]
+	];
+  });
+}
+
+function pop_AeronauticalChartIndex0(feature, layer) {
+	layer.on({
+		mouseout: function(e) {
+			layer.setStyle(doStyleAeronauticalChartIndex0(feature));
+		},
+		mouseover: highlightFeature,
+	});
+}
+
+function doStyleAeronauticalChartIndex0(feature) {
+	return {
+		weight: 1.04,
+		color: '#cd6300',
+		fillColor: 'none',
+		dashArray: '',
+		lineCap: 'square',
+		lineJoin: 'bevel',
+		opacity: 0.8,
+		fillOpacity: 0.815
+	};
+}
+
+map.createPane('pane_AeronauticalChartIndex0');
+map.getPane('pane_AeronauticalChartIndex0').style.zIndex = 601;
+var json_AeronauticalChartIndex0JSON = new L.geoJson(json_AeronauticalChartIndex0, {
+	pane: 'pane_AeronauticalChartIndex0',
+	onEachFeature: pop_AeronauticalChartIndex0,
+	style: doStyleAeronauticalChartIndex0
+});
+bounds_group.addLayer(json_AeronauticalChartIndex0JSON);
+feature_group.addLayer(json_AeronauticalChartIndex0JSON);
+function pop_ChartsheetsthatarenotavailableinDigitalArchive1(feature, layer) {
+	layer.on({
+		mouseout: function(e) {
+			layer.setStyle(doStyleChartsheetsthatarenotavailableinDigitalArchive1(feature));
+		},
+		mouseover: highlightFeature,
+	});
+}
+
+function doStyleChartsheetsthatarenotavailableinDigitalArchive1(feature) {
+	return {
+		weight: 1.04,
+		color: '#000000',
+		fillColor: '#ffffff',
+		dashArray: '',
+		lineCap: 'square',
+		lineJoin: 'bevel',
+		opacity: 0.8,
+		fillOpacity: 0.7,
+	};
+}
+
+map.createPane('pane_ChartsheetsthatarenotavailableinDigitalArchive1');
+map.getPane('pane_ChartsheetsthatarenotavailableinDigitalArchive1').style.zIndex = 602;
+var json_ChartsheetsthatarenotavailableinDigitalArchive1JSON = new L.geoJson(json_ChartsheetsthatarenotavailableinDigitalArchive1, {
+	pane: 'pane_ChartsheetsthatarenotavailableinDigitalArchive1',
+	onEachFeature: pop_ChartsheetsthatarenotavailableinDigitalArchive1,
+	style: doStyleChartsheetsthatarenotavailableinDigitalArchive1
+});
+bounds_group.addLayer(json_ChartsheetsthatarenotavailableinDigitalArchive1JSON);
+feature_group.addLayer(json_ChartsheetsthatarenotavailableinDigitalArchive1JSON);
+function pop_AvailableinDigitalArchiveMcMasterUniversityLibrary2(feature, layer) {
+	layer.on({
+		mouseout: function(e) {
+			layer.setStyle(doStyleAvailableinDigitalArchiveMcMasterUniversityLibrary2(feature));
+
+		},
+		mouseover: highlightFeature,
+	});
+	var popupContent = '<tr><th scope="row"><strong>Sheet Number </strong></th><td>' + (feature.properties['Sheet'] !== null ? Autolinker.link(String(feature.properties['Sheet'])) : '') + '</td></tr><tr><th scope="row"><br><strong>Chart Title </strong></th><td>' + (feature.properties['titlefield'] !== null ? Autolinker.link(String(feature.properties['titlefield'])) : '') + '</td></tr><tr><th scope="row"><br><strong>NW Corner (Latitude, Longitude)  </strong></th><td>' + (feature.properties['NW_corner_'] !== null ? Autolinker.link(String(feature.properties['NW_corner_'])) : '') + '</td></tr><tr><th scope="row"><br><strong>NE Corner (Latitude, Longitude)   </strong></th><td>' + (feature.properties['NE_corner_'] !== null ? Autolinker.link(String(feature.properties['NE_corner_'])) : '') + '</td></tr><tr><th scope="row"><br><strong>SE Corner (Latitude, Longitude)   </strong></th><td>' + (feature.properties['SE_corner_'] !== null ? Autolinker.link(String(feature.properties['SE_corner_'])) : '') + '</td></tr><tr><th scope="row"><br><strong>SW Corner (Latitude, Longitude)  </strong></th><td>' + (feature.properties['SW_corner_'] !== null ? Autolinker.link(String(feature.properties['SW_corner_'])) : '') + '</td></tr><tr><td><br><strong>URL </strong>' + (feature.properties['URL'] !== null ? Autolinker.link(String(feature.properties['URL'])) : '') + '</td></tr>';
+	layer.bindPopup(popupContent,);
+}
+
+function doStyleAvailableinDigitalArchiveMcMasterUniversityLibrary2(feature) {
+	return {
+		weight: 1.04,
+		color: '#000000',
+		fillColor: '#fdbf6f',
+		dashArray: '',
+		lineCap: 'square',
+		lineJoin: 'bevel',
+		opacity: 0.5,
+		fillOpacity: 0.5
+	};
+}
+map.createPane('pane_AvailableinDigitalArchiveMcMasterUniversityLibrary2');
+map.getPane('pane_AvailableinDigitalArchiveMcMasterUniversityLibrary2').style.zIndex = 603;
+var json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON = new L.geoJson(json_AvailableinDigitalArchiveMcMasterUniversityLibrary2, {
+	pane: 'pane_AvailableinDigitalArchiveMcMasterUniversityLibrary2',
+	onEachFeature: pop_AvailableinDigitalArchiveMcMasterUniversityLibrary2,
+	style: doStyleAvailableinDigitalArchiveMcMasterUniversityLibrary2
+});
+bounds_group.addLayer(json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON);
+feature_group.addLayer(json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON);
+raster_group.addTo(map);
+feature_group.addTo(map);		
+
+var osmGeocoder = new L.Control.OSMGeocoder({
+	collapsed: false,
+	position: 'topright',
+	text: '    Search    ',
+});
+osmGeocoder.addTo(map);
+
+L.control.layers(baseMaps,{'&nbsp <img src="legend/AeronauticalChartIndex0.png" /> &nbsp Aeronautical Chart Index': json_AeronauticalChartIndex0JSON,'&nbsp <img src="legend/AvailableinDigitalArchiveMcMasterUniversityLibrary2.png" /> &nbsp Available in the Digital Archive': json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON,'&nbsp <img src="legend/ChartsheetsthatarenotavailableinDigitalArchive1.png" /> &nbsp Unavailable in the Digital Archive': json_ChartsheetsthatarenotavailableinDigitalArchive1JSON},{collapsed:false}).addTo(map);
+setBounds();
+</script>
+
+</body>
+	
 </html>
