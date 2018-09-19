@@ -144,16 +144,19 @@ var raster_group = new L.LayerGroup([]);
 var map = L.map('map', {center: new L.LatLng(20, 0),zoom: 2, maxzoom: 26, minzoom: 2}); 
 map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
 
+
+	
 var StamenToner = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', {maxZoom: 26, attribution: 'Map tiles by  <a href="http://stamen.com">Stamen Design</a>' + '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0 </a>' + 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap </a>contributors ' + '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
 });
 map.addLayer(StamenToner);
 
-var ThunderforestTransport = L.tileLayer('http://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}.png', {maxZoom: 26,
-	attribution: '&copy; <a href="http://www.opencyclemap.org"> OpenCycleMap </a>,&copy; <a href="http://openstreetmap.org"> OpenStreetMap </a> contributors ' + '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-});
-map.addLayer(ThunderforestTransport);
 
-var baseMaps = {"Stamen Toner": StamenToner,"Thunderforest Transport": ThunderforestTransport}; 
+var osm = L.tileLayer('http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+	maxZoom: 26});
+	map.addLayer(osm);
+
+var baseMaps = {"OpenStreetMap":osm,"Stamen Toner": StamenToner}; 
 
 function setBounds() {
 	if (bounds_group.getLayers().length) {
