@@ -8,7 +8,7 @@
 
 		<!----------THE FOLLOWING IS FOR THE WELCOME PAGE POP-UP.---------->
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
 		<link rel="stylesheet" type="text/css" href="style.css">
@@ -35,7 +35,7 @@
 	<header>
 		
 		<div class="logo">
-			<img src="mcm-library_left-col.png" />
+			<img src="mcm-library_left-col.png" alt="McMaster University Library logo" />
 		</div>	
 		
 		<div id="buttonzone" style="right:1vw">
@@ -55,15 +55,15 @@
 <!-------THE FOLLOWING IS FOR THE WELCOME PAGE POP-UP.--------->
 
 <!-- The Modal -->
-<div id="myModal" class="modal">
+<div id="myModal" class="modal" role="dialog" aria-labelledby="welcomeLabel" tabindex="-1">
 
 <!-- Modal content -->
 	<div class="modal-content">
   
   <!-- Modal header -->
 		<div class="modal-header">
-		  <span class="close" style="font-size:calc(12px + 1vw)">x</span>
-		  <h2 style="font-size:calc(12px + 1vw); font-weight:bold;">WELCOME</h2><h2 style="font-size:calc(10px + 0.5vw); font-size-adjust:auto; font-style:italic">A Guide to the McMaster University Library's World War II Aeronautical Charts Index</h2>
+		  <button class="close" data-dismiss="modal" aria-label="Close" style="border:none;background-color: transparent;"><span style="font-size:calc(12px + 1vw)">x</span></button> 
+		  <h2 id="welcomeLabel" style="font-size:calc(12px + 1vw); font-weight:bold;">WELCOME</h2><h2 style="font-size:calc(10px + 0.5vw); font-size-adjust:auto; font-style:italic">A Guide to the McMaster University Library's World War II Aeronautical Charts Index</h2> 
 		</div>
 		
 		<div class="w3-content w3-display-container">
@@ -73,7 +73,7 @@
 		
 		<!-- Slide 1 -->
 		<div class="w3-display-container mySlides">
-		  <img src="image0.jpg" style="width:100%">
+		  <img src="image0.jpg" style="width:100%" alt="">
 		  <div class="modal-footer">
 		  Welcome to McMaster University Library’s <b>World War II Aeronautical Charts Index</b> -- An interactive tool for finding and accessing World War II era 1:1 million U.S. American Air Forces (AAF) Aeronautical Charts. Features of this index along with the aeronautical charts include a zooming tool, a search box, and the layer panel.
 		  <br>
@@ -84,7 +84,7 @@
 		
 		<!-- Slide 2 -->
 		<div class="w3-display-container mySlides">
-		  <img src="image1.jpg" style="width:100%">
+		  <img src="image1.jpg" style="width:100%" alt="">
 		  <div class="modal-footer">
 			Change the base map using the layer panel on the right.
 		  </div>
@@ -92,7 +92,7 @@
 
 		<!-- Slide 3 -->
 		<div class="w3-display-container mySlides">
-		  <img src="image2.jpg" style="width:100%">
+		  <img src="image2.jpg" style="width:100%" alt="">
 		  <div class="modal-footer">
 		Find and zoom to an area of interest by performing an address search in the search box.
 		  </div>
@@ -100,7 +100,7 @@
 
 		<!-- Slide 4 -->
 		<div class="w3-display-container mySlides">
-		  <img src="image3.jpg" style="width:100%">
+		  <img src="image3.jpg" style="width:100%" alt="">
 		  <div class="modal-footer">
 		Click on a grid square to find more information on a given chart. An orange shaded grid square indicates that a digital version is available for viewing. 
 		  </div>
@@ -280,7 +280,7 @@ var osmGeocoder = new L.Control.OSMGeocoder({
 });
 osmGeocoder.addTo(map);
 
-L.control.layers(baseMaps,{'&nbsp <img src="legend/AeronauticalChartIndex0.png" /> &nbsp Aeronautical Chart Index': json_AeronauticalChartIndex0JSON,'&nbsp <img src="legend/AvailableinDigitalArchiveMcMasterUniversityLibrary2.png" /> &nbsp Available in the Digital Archive': json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON,'&nbsp <img src="legend/ChartsheetsthatarenotavailableinDigitalArchive1.png" /> &nbsp Unavailable in the Digital Archive': json_ChartsheetsthatarenotavailableinDigitalArchive1JSON},{collapsed:false}).addTo(map);
+L.control.layers(baseMaps,{'&nbsp <img src="legend/AeronauticalChartIndex0.png" alt=""/> &nbsp Aeronautical Chart Index': json_AeronauticalChartIndex0JSON,'&nbsp <img src="legend/AvailableinDigitalArchiveMcMasterUniversityLibrary2.png" alt=""/> &nbsp Available in the Digital Archive': json_AvailableinDigitalArchiveMcMasterUniversityLibrary2JSON,'&nbsp <img src="legend/ChartsheetsthatarenotavailableinDigitalArchive1.png" alt=""/> &nbsp Unavailable in the Digital Archive': json_ChartsheetsthatarenotavailableinDigitalArchive1JSON},{collapsed:false}).addTo(map);
 setBounds();
 </script>
 
