@@ -5,13 +5,11 @@
 }
 
 .leaflet-control-geocoder {
-	box-shadow: 0 1px 7px #000;
-	background: white;
-	-moz-border-radius: 0px;
-	-webkit-border-radius: 0px;
-	border-radius: 4px;
-	font-weight: bold;
-	color: red;
+	box-shadow: 0 1px 7px #999;
+	background: #f8f8f9;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
 }
 
 .leaflet-control-geocoder a {
